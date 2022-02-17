@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { filterNumb, isRepeat, filterString } from './validation/validate'
+import ElemOutputText from './Components/ElemOutputText'
+import { sortArr, isRepeat } from './validation/validate'
 
 function App() {
   const [value, setValue] = useState({
@@ -10,18 +11,20 @@ function App() {
   const [stateAnother, setStateAnother] = useState([])
   const [stateSelect, setStateSelect] = useState('sortTime')
 
-  useEffect( () =>{
+  useEffect(() => {
     localStorage.getItem('stateString') && setStateString(JSON.parse(localStorage.getItem('stateString')))
     localStorage.getItem('stateAnother') && setStateAnother(JSON.parse(localStorage.getItem('stateAnother')))
     localStorage.getItem('stateNumber') && setStateNumber(JSON.parse(localStorage.getItem('stateNumber')))
-  }, [] )
+  }, [])
 
   const changeHandler = e => setValue({ text: e.target.value, time: new Date(), count: 1 })
 
-  stateString.length !== 0 && localStorage.setItem('stateString', JSON.stringify(stateString))
-  stateAnother.length !== 0 && localStorage.setItem('stateAnother', JSON.stringify(stateAnother))
-  stateNumber.length !== 0 && localStorage.setItem('stateNumber', JSON.stringify(stateNumber))
- 
+  useEffect(() => {
+    stateString.length !== 0 && localStorage.setItem('stateString', JSON.stringify(stateString))
+    stateAnother.length !== 0 && localStorage.setItem('stateAnother', JSON.stringify(stateAnother))
+    stateNumber.length !== 0 && localStorage.setItem('stateNumber', JSON.stringify(stateNumber))
+  }, [stateNumber, stateString, stateAnother])
+  
   const changeState = e => {
     if (!value.text) return;
     if (e.key === 'Enter') {
@@ -43,9 +46,9 @@ function App() {
     }
   }
 
-  const changeSelect = e => {   
+  const changeSelect = e => {
     setStateSelect(e.target.value);
-    sortArr(stateSelect, stateNumber, setStateNumber)
+    sortArr(stateSelect, stateNumber, setStateNumber, false)
     sortArr(stateSelect, stateString, setStateString)
     sortArr(stateSelect, stateAnother, setStateAnother)
   }
@@ -62,24 +65,9 @@ function App() {
         onKeyPress={changeState}
       />}
     </div>
-    <div className='elem' style={{ backgroundColor: '#ffe5b4' }}>
-      <div className='centerBlogForText'>
-        {stateNumber.length ? stateNumber.map((e, index) => <p key={index}>{e.text}  {e.count > 1 && ` x${e.count}`}  </p>)
-          : <p>Нет введенных данных</p>}
-      </div>
-    </div>
-    <div className='elem' style={{ backgroundColor: 'blue' }}>
-      <div className='centerBlogForText'>
-        {stateString.length ? stateString.map((e, index) => <p key={index}>{e.text}  {e.count > 1 && ` x${e.count}`} </p>)
-          : <p>Нет введенных данных</p>}
-      </div>
-    </div>
-    <div className='elem' style={{ backgroundColor: 'black', color: 'white' }}>
-      <div className='centerBlogForText'>
-        {stateAnother.length ? stateAnother.map((e, index) => <p key={index}>{e.text} {e.count > 1 && ` x${e.count}`} </p>)
-          : <p>Нет введенных данных</p>}
-      </div>
-    </div>
+    <ElemOutputText state={stateNumber} backgroundColor='#ffe5b4' />
+    <ElemOutputText state={stateString} backgroundColor='blue' />
+    <ElemOutputText state={stateAnother} backgroundColor='black' color='white' />
   </div>
 }
 
