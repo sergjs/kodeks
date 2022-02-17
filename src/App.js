@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-import { filterNumb, isRepeat, filterString } from './validation/validate';
+import React, { useEffect, useState } from 'react'
+import { filterNumb, isRepeat, filterString } from './validation/validate'
 
 function App() {
   const [value, setValue] = useState({
@@ -23,7 +22,7 @@ function App() {
   stateAnother.length !== 0 && localStorage.setItem('stateAnother', JSON.stringify(stateAnother))
   stateNumber.length !== 0 && localStorage.setItem('stateNumber', JSON.stringify(stateNumber))
  
-  const changeState = (e) => {
+  const changeState = e => {
     if (!value.text) return;
     if (e.key === 'Enter') {
       e.preventDefault()
@@ -34,7 +33,7 @@ function App() {
     }
   }
 
-  const validateText = (value) => {
+  const validateText = value => {
     if (!value.text.match(/[0-9]/gi)) {
       return isRepeat(value, stateString, setStateString)
     } else if (!value.text.match(/[A-ZА-Я]/gi)) {
@@ -44,15 +43,15 @@ function App() {
     }
   }
 
-  const chengeSelect = (e) => {   
+  const changeSelect = e => {   
     setStateSelect(e.target.value);
-    filterNumb(stateSelect, stateNumber, setStateNumber)
-    filterString(stateSelect, stateString, setStateString)
-    filterString(stateSelect, stateAnother, setStateAnother)
+    sortArr(stateSelect, stateNumber, setStateNumber)
+    sortArr(stateSelect, stateString, setStateString)
+    sortArr(stateSelect, stateAnother, setStateAnother)
   }
 
   return <div className='container'>
-    <select value={stateSelect} className='sort' onChange={chengeSelect}>
+    <select value={stateSelect} className='sort' onChange={changeSelect}>
       <option value='sortTime'>По времени добавления</option>
       <option value='sortAlphabetical'>По алфавиту</option>
     </select>

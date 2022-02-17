@@ -11,12 +11,12 @@ export const isRepeat = (value, arr, setObj) => {
     ])
 }
 
-export const filterNumb = (stateSelect, arr, setArr) =>{  
-    stateSelect === 'sortTime' ? setArr(arr.sort( (a, b) => a.text > b.text  ? -1 : 1 ))
-    : setArr(arr.sort( (a, b) => a.time > b.time  ? 1 : -1 ))
-}
+// export const filterNumb = (stateSelect, arr, setArr) =>{  
+//     stateSelect === 'sortTime' ? setArr(arr.sort( (a, b) => a.text > b.text  ? -1 : 1 ))
+//     : setArr(arr.sort( (a, b) => a.time > b.time  ? 1 : -1 ))
+// }
 
-export const filterString = (stateSelect, arr, setArr) =>{
+export const sortArr = (stateSelect, arr, setArr) =>{
     stateSelect === 'sortTime' ? setArr(arr.sort( (a, b) => a.text > b.text ? 1 : -1))
     : setArr(arr.sort( (a, b) => a.time > b.time  ? 1 : -1))
 }
