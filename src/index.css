@@ -33,6 +33,7 @@ code {
   height: 40vh;
   margin: 25px 25px 5px;
   overflow-y: scroll;
+  max-width: 40vw;
 }
 .elem p{
   text-align: center; 
