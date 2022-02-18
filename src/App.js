@@ -6,25 +6,27 @@ function App() {
   const [value, setValue] = useState({
     text: '', time: '', count: 1
   })
-  const [stateNumber, setStateNumber] = useState([])
-  const [stateString, setStateString] = useState([])
-  const [stateAnother, setStateAnother] = useState([])
   const [stateSelect, setStateSelect] = useState('sortTime')
+  const [stateMap, setStateMap] = useState({
+    string: [], number: [], another: []
+  })
+  
+  useEffect(() => {
+    Object.keys(stateMap).map(elem => {
+      localStorage.getItem(`${elem}`) && setStateMap(prev => { 
+        return { ...prev, [elem]: JSON.parse(localStorage.getItem(`${elem}`)) } })
+    })
+  }, [])
 
   useEffect(() => {
-    localStorage.getItem('stateString') && setStateString(JSON.parse(localStorage.getItem('stateString')))
-    localStorage.getItem('stateAnother') && setStateAnother(JSON.parse(localStorage.getItem('stateAnother')))
-    localStorage.getItem('stateNumber') && setStateNumber(JSON.parse(localStorage.getItem('stateNumber')))
-  }, [])
+    Object.values(stateMap).map((elem, index) => {
+      elem.length !== 0 && localStorage.setItem(`${Object.keys(stateMap)[index]}`, JSON.stringify(elem))
+    })
+  }, [stateMap])
+
 
   const changeHandler = e => setValue({ text: e.target.value, time: new Date(), count: 1 })
 
-  useEffect(() => {
-    stateString.length !== 0 && localStorage.setItem('stateString', JSON.stringify(stateString))
-    stateAnother.length !== 0 && localStorage.setItem('stateAnother', JSON.stringify(stateAnother))
-    stateNumber.length !== 0 && localStorage.setItem('stateNumber', JSON.stringify(stateNumber))
-  }, [stateNumber, stateString, stateAnother])
-  
   const changeState = e => {
     if (!value.text) return;
     if (e.key === 'Enter') {
@@ -38,19 +40,17 @@ function App() {
 
   const validateText = value => {
     if (!value.text.match(/[0-9]/gi)) {
-      return isRepeat(value, stateString, setStateString)
+      return isRepeat(value, 'string', setStateMap, stateMap)
     } else if (!value.text.match(/[A-ZА-Я]/gi)) {
-      return isRepeat(value, stateNumber, setStateNumber)
+      return isRepeat(value, 'number', setStateMap, stateMap)
     } else {
-      return isRepeat(value, stateAnother, setStateAnother)
+      return isRepeat(value, 'another', setStateMap, stateMap)
     }
   }
 
   const changeSelect = e => {
     setStateSelect(e.target.value);
-    sortArr(stateSelect, stateNumber, setStateNumber, false)
-    sortArr(stateSelect, stateString, setStateString)
-    sortArr(stateSelect, stateAnother, setStateAnother)
+    sortArr(stateSelect, stateMap, setStateMap)
   }
 
   return <div className='container'>
@@ -65,9 +65,9 @@ function App() {
         onKeyPress={changeState}
       />}
     </div>
-    <ElemOutputText state={stateNumber} backgroundColor='#ffe5b4' />
-    <ElemOutputText state={stateString} backgroundColor='blue' />
-    <ElemOutputText state={stateAnother} backgroundColor='black' color='white' />
+    <ElemOutputText state={stateMap.number} backgroundColor='#ffe5b4' />
+    <ElemOutputText state={stateMap.string} backgroundColor='blue' />
+    <ElemOutputText state={stateMap.another} backgroundColor='black' color='white' />
   </div>
 }
 
