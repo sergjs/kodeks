@@ -25,15 +25,15 @@ code {
 .input{
   margin: auto; 
   display: flex; 
-  margin-top: 21vh;
+  margin-top: 10vh;
   width: 28vw;
   height: 30px;
 }
 .centerBlogForText{ 
-  height: 40vh;
-  margin: 25px 25px 5px;
+  max-height: 40vh;
+  margin-top: 25px;
   overflow-y: auto;
-  max-width: 40vw;
+  max-width: 100%;
 }
 .elem p{
   text-align: center; 

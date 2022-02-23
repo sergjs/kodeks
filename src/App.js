@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { countryHandler } from './api'
 import ElemOutputText from './Components/ElemOutputText'
 import { sortArr, isRepeat } from './validation/validate'
 
@@ -10,6 +11,7 @@ function App() {
   const [stateMap, setStateMap] = useState({
     string: [], number: [], another: []
   })
+  const [nameCountry, setNameCountry] = useState('')
   
   useEffect(() => {
     Object.keys(stateMap).map(elem => {
@@ -31,6 +33,7 @@ function App() {
     if (!value.text) return;
     if (e.key === 'Enter') {
       e.preventDefault()
+      fetchCountry(value.text)
       validateText(value)
       setValue({
         text: '', time: '', count: value.count
@@ -38,11 +41,24 @@ function App() {
     }
   }
 
+  const fetchCountry = useCallback(async (key) => { 
+    try {
+        const fetched = await countryHandler(key)
+        setNameCountry(fetched)
+    } catch (e) { }
+}, [countryHandler])
+
+useEffect(() => {
+  fetchCountry()
+}, [fetchCountry])
+
+
+
   const validateText = value => {
-    if (!value.text.match(/[0-9]/gi)) {
-      return isRepeat(value, 'string', setStateMap, stateMap)
-    } else if (!value.text.match(/[A-ZА-Я]/gi)) {
+    if (value.text.match(/^\d+$/gi)) {
       return isRepeat(value, 'number', setStateMap, stateMap)
+    } else if (value.text.match(/^[A-ZА-ЯЁ]+$/gi)) {
+      return isRepeat(value, 'string', setStateMap, stateMap)
     } else {
       return isRepeat(value, 'another', setStateMap, stateMap)
     }
@@ -64,6 +80,7 @@ function App() {
         onChange={changeHandler}
         onKeyPress={changeState}
       />}
+      {nameCountry && nameCountry.map( (elem, index) => <p key = {index}> {elem[elem.length - 1]} </p>)}
     </div>
     <ElemOutputText state={stateMap.number} backgroundColor='#ffe5b4' />
     <ElemOutputText state={stateMap.string} backgroundColor='blue' />

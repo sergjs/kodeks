@@ -8,5 +8,5 @@ const ElemOutputText = ({state, backgroundColor, color = 'black'}) => {
         </div>
     </div>
 }
-
+ 
 export default ElemOutputText;

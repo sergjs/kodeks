@@ -14,14 +14,16 @@ export const isRepeat = (value, nameKey, setState, state) => {
 }
 
 export const sortArr = (stateSelect, state, setState) => {
+    let collator = new Intl.Collator("ru");
     let keysObj = Object.keys(state)
+    
     Object.values(state).map((elem, index) =>
         setState(prev => {
             return {
                 ...prev, [`${keysObj[index]}`]: elem.sort((a, b) =>
-                    stateSelect === 'sortAlphabetical' ? a.time > b.time ? 1 : -1
-                        : [`${keysObj[index]}`] !== 'number' ? a.text > b.text ? 1 : -1 :
-                            a.text - b.text )
+                    stateSelect === 'sortAlphabetical' ? collator.compare(a.time, b.time)
+                        : [`${keysObj[index]}`] != 'number' ? collator.compare(a.text, b.text) 
+                            : a.text - b.text )
             }
         }))
 }
