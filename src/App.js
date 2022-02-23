@@ -36,9 +36,7 @@ function App() {
     if (!value.text) return;
     if (e.key === 'Enter') {
       e.preventDefault()
-      setPreLoader(true)
       setNameCountry('')
-      fetchCountry(value.text)
       validateText(value)
       setValue({
         text: '', time: '', count: value.count
@@ -51,13 +49,15 @@ function App() {
       const fetched = await countryHandler(key)
       setNameCountry(fetched)
       setPreLoader(false)
-    } catch (e) { console.log(e) }
+    } catch (e) { }
   }
 
   const validateText = value => {
     if (value.text.match(/^\d+$/gi)) {
       return isRepeat(value, 'number', setStateMap, stateMap)
     } else if (value.text.match(/^[A-ZА-ЯЁ]+$/gi)) {
+      setPreLoader(true)
+      fetchCountry(value.text)
       return isRepeat(value, 'string', setStateMap, stateMap)
     } else {
       return isRepeat(value, 'another', setStateMap, stateMap)
@@ -80,7 +80,7 @@ function App() {
         onChange={changeHandler}
         onKeyPress={changeState}
       />}
-      {preLoader && <img src={loader} className='img_loader'/>}
+      {preLoader && <img src={loader} className='img_loader' />}
       {nameCountry && Array.isArray(nameCountry) ? nameCountry.map((elem, index) => <p key={index}> {elem[elem.length - 1]} </p>)
         : <p> {nameCountry} </p>}
     </div>
