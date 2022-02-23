@@ -47,6 +47,7 @@ function App() {
   const fetchCountry = async (key) => {
     try {
       const fetched = await countryHandler(key)
+      console.log(fetched)
       setNameCountry(fetched)
       setPreLoader(false)
     } catch (e) { }
