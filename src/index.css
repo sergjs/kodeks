@@ -46,3 +46,7 @@ code {
   right: 25px;
   height: 25px;
 }
+.img_loader{
+  margin: auto; 
+  display: flex; 
+}

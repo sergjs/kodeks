@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { countryHandler } from './api'
 import ElemOutputText from './Components/ElemOutputText'
 import { sortArr, isRepeat } from './validation/validate'
+import loader from './img/Loader.gif'
 
 function App() {
   const [value, setValue] = useState({
@@ -12,11 +13,13 @@ function App() {
     string: [], number: [], another: []
   })
   const [nameCountry, setNameCountry] = useState('')
-  
+  const [preLoader, setPreLoader] = useState(false)
+
   useEffect(() => {
     Object.keys(stateMap).map(elem => {
-      localStorage.getItem(`${elem}`) && setStateMap(prev => { 
-        return { ...prev, [elem]: JSON.parse(localStorage.getItem(`${elem}`)) } })
+      localStorage.getItem(`${elem}`) && setStateMap(prev => {
+        return { ...prev, [elem]: JSON.parse(localStorage.getItem(`${elem}`)) }
+      })
     })
   }, [])
 
@@ -33,6 +36,8 @@ function App() {
     if (!value.text) return;
     if (e.key === 'Enter') {
       e.preventDefault()
+      setPreLoader(true)
+      setNameCountry('')
       fetchCountry(value.text)
       validateText(value)
       setValue({
@@ -41,18 +46,13 @@ function App() {
     }
   }
 
-  const fetchCountry = useCallback(async (key) => { 
+  const fetchCountry = async (key) => {
     try {
-        const fetched = await countryHandler(key)
-        setNameCountry(fetched)
-    } catch (e) { }
-}, [countryHandler])
-
-useEffect(() => {
-  fetchCountry()
-}, [fetchCountry])
-
-
+      const fetched = await countryHandler(key)
+      setNameCountry(fetched)
+      setPreLoader(false)
+    } catch (e) { console.log(e) }
+  }
 
   const validateText = value => {
     if (value.text.match(/^\d+$/gi)) {
@@ -80,7 +80,9 @@ useEffect(() => {
         onChange={changeHandler}
         onKeyPress={changeState}
       />}
-      {nameCountry && nameCountry.map( (elem, index) => <p key = {index}> {elem[elem.length - 1]} </p>)}
+      {preLoader && <img src={loader} className='img_loader'/>}
+      {nameCountry && Array.isArray(nameCountry) ? nameCountry.map((elem, index) => <p key={index}> {elem[elem.length - 1]} </p>)
+        : <p> {nameCountry} </p>}
     </div>
     <ElemOutputText state={stateMap.number} backgroundColor='#ffe5b4' />
     <ElemOutputText state={stateMap.string} backgroundColor='blue' />
