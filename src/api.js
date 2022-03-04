@@ -1,5 +1,5 @@
 export const countryHandler = async (key) => {
-    try {debugger
+    try {
         const response = await fetch(`https://restcountries.com/v3.1/name/${key}?fullText=true`, ['GET'])
         const data = await response.json()
         if (response.status === 404) {
@@ -19,10 +19,11 @@ const cityHandler = async (key) => {
     try {
         const response = await fetch(`https://restcountries.com/v3.1/capital/${key}`, ['GET'])
         const data = await response.json()
-        if (response.status === 404) {
-            throw new Error('Такой страны или города не существует')
-        } else if (response.status === 200) {
+        const arrCity = data.filter( e => e.capital[0].toLowerCase() === key.toLowerCase())
+        if (response.status === 200 && arrCity.length) {
             return data.map(e => e.altSpellings)
+        } else if (response.status === 404 || response.status === 200) {
+            throw new Error('Такой страны или города не существует')
         } else {
             throw new Error(data.message || 'Что-то пошло не так')
         }
