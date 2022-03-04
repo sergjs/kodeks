@@ -53,9 +53,9 @@ function App() {
   }
 
   const validateText = value => {
-    if (value.text.match(/^\d+$/gi)) {
+    if (value.text.split(' ').join('').match(/^\d+$/gi)) {
       return isRepeat(value, 'number', setStateMap, stateMap)
-    } else if (value.text.match(/^[A-ZА-ЯЁ]+$/gi)) {
+    } else if (value.text.split(' ').join('').match(/^[A-ZА-ЯЁ]+$/gi)) {
       setPreLoader(true)
       fetchCountry(value.text)
       return isRepeat(value, 'string', setStateMap, stateMap)
@@ -81,7 +81,7 @@ function App() {
         onKeyPress={changeState}
       />}
       {preLoader && <img src={loader} className='img_loader' />}
-      {nameCountry && Array.isArray(nameCountry) ? nameCountry.map((elem, index) => <p key={index}> {elem[elem.length - 1]} </p>)
+      {nameCountry && Array.isArray(nameCountry) ?   <p  > {nameCountry} </p>
         : <p> {nameCountry} </p>}
     </div>
     <ElemOutputText state={stateMap.number} backgroundColor='#ffe5b4' />
